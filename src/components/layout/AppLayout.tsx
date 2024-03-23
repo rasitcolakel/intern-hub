@@ -8,11 +8,13 @@ type LayoutProps = {
 
 function AppLayout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen w-full">
-      <Navbar />
-      <main className="flex flex-col items-center justify-center w-full">
-        {children}
-      </main>
+    <div className="w-full min-h-screen">
+      <div className="container">
+        <Navbar />
+        <main className="flex flex-col items-center justify-center w-full">
+          {children}
+        </main>
+      </div>
       <Footer />
     </div>
   );

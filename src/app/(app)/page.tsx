@@ -11,5 +11,5 @@ export default async function Home() {
 
   if (redirectToOnboarding) return redirect(paths.onboarding);
 
-  return <UserButton />;
+  return <></>;
 }
