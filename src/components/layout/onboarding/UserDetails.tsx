@@ -4,20 +4,17 @@ import { useFormContext } from "react-hook-form";
 import {
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import {
   FormField,
   FormLabel,
-  FormDescription,
   FormMessage,
   FormItem,
   FormControl,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -27,14 +24,7 @@ import { Building2, UserRoundSearch } from "lucide-react";
 type Props = {};
 
 const UserDetails = (props: Props) => {
-  const { control, handleSubmit, formState, watch } =
-    useFormContext<TOnboardingSchema>();
-
-  console.log(formState.errors);
-
-  const onSubmit = async (data: TOnboardingSchema) => {
-    console.log(data);
-  };
+  const { control } = useFormContext<TOnboardingSchema>();
 
   return (
     <CardHeader className="p-2">

@@ -1,9 +1,11 @@
 "use server";
 
 import prisma from "@/db/db";
+import { TOnboardingSchema } from "@/types/onboarding";
 import { UserCreatedEvent } from "@/types/user";
 import { auth } from "@clerk/nextjs";
-import { Prisma } from "@prisma/client";
+import { Prisma, UserType } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 export const createUser = async (payload: UserCreatedEvent) => {
   const user: Prisma.UserCreateInput = {
@@ -34,10 +36,60 @@ export const getMe = async () => {
       where: {
         id: userId,
       },
+      include: {
+        interests: true,
+        tags: true,
+      },
     });
     return user;
   } catch (error) {
     console.error("Error getting user:", error);
+    throw error;
+  }
+};
+
+export const updateUser = async (data: TOnboardingSchema) => {
+  try {
+    const me = await getMe();
+
+    if (!me) {
+      return redirect("/sign-in");
+    }
+
+    const { type } = data;
+
+    let updatedData: Prisma.UserUpdateInput = {};
+
+    if (type === UserType.COMPANY) {
+      updatedData = {
+        name: data.name,
+        type: data.type,
+      };
+    } else {
+      updatedData = {
+        name: data.name,
+        type: data.type,
+        interests: {
+          connect: data.interests.map((interest) => ({
+            id: interest.id,
+          })),
+        },
+        tags: {
+          connect: data.tags.map((tag) => ({
+            id: tag.id,
+          })),
+        },
+      };
+    }
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: me.id,
+      },
+      data: updatedData,
+    });
+    return updatedUser;
+  } catch (error) {
+    console.error("Error updating user:", error);
     throw error;
   }
 };

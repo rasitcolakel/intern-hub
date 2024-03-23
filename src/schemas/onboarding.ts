@@ -9,12 +9,14 @@ export const OnboardingSchema = z.object({
     z.object({
       label: z.string(),
       value: z.string(),
+      id: z.string(),
     })
   ),
   tags: z.array(
     z.object({
       label: z.string(),
       value: z.string(),
+      id: z.string(),
     })
   ),
 });

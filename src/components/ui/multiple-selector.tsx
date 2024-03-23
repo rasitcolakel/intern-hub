@@ -22,6 +22,7 @@ export interface Option {
   fixed?: boolean;
   /** Group the options by providing key. */
   [key: string]: string | boolean | undefined;
+  id?: string;
 }
 interface GroupOption {
   [key: string]: Option[];

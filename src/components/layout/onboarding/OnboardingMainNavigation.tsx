@@ -17,6 +17,8 @@ import { TMinifiedInterest } from "@/types/interests";
 import { useEffect, useMemo } from "react";
 import { onboardingAtom } from "@/store/onboarding";
 import { useSetAtom } from "jotai";
+import { updateUser } from "@/actions/userActions";
+import { useRouter } from "next/navigation";
 
 type LayoutProps = {
   user: User;
@@ -44,6 +46,8 @@ function OnboardingMainNavigation({ user, tags, interests }: LayoutProps) {
     },
   });
 
+  const router = useRouter();
+
   const type = methods.watch("type");
 
   const steps = useMemo(() => {
@@ -70,7 +74,6 @@ function OnboardingMainNavigation({ user, tags, interests }: LayoutProps) {
         shouldFocus: true,
       });
 
-      console.log(isValid);
       if (!isValid) {
         return;
       }
@@ -84,22 +87,47 @@ function OnboardingMainNavigation({ user, tags, interests }: LayoutProps) {
 
   const renderSubmitButton = () => {
     if (step === steps.length - 1) {
-      return <Button type="submit">Gönder</Button>;
+      return (
+        <Button
+          type="submit"
+          key="submit"
+          disabled={methods.formState.isSubmitting}
+        >
+          Gönder
+        </Button>
+      );
     } else {
-      return <Button onClick={nextStep}>İleri</Button>;
+      return (
+        <Button onClick={nextStep} type="button" key="next">
+          İleri
+        </Button>
+      );
     }
   };
 
   useEffect(() => {
     setOnboarding({
-      tags,
-      interests,
+      tags: tags.map((tag) => ({
+        label: tag.name,
+        value: tag.name,
+        id: tag.id,
+      })),
+      interests: interests.map((interest) => ({
+        label: interest.name,
+        value: interest.name,
+        id: interest.id,
+      })),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function onSubmit(values: TOnboardingSchema) {
-    console.log(values);
+  async function onSubmit(values: TOnboardingSchema) {
+    try {
+      await updateUser(values);
+      router.replace("/");
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
   }
 
   return (

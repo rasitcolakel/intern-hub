@@ -37,19 +37,21 @@ const InterestsAndTechStack = (props: Props) => {
 
   const onboarding = useAtomValue(onboardingAtom);
 
-  const tags: Option[] = useMemo(() => {
-    return onboarding.tags.map((tag) => ({
-      label: tag.name,
-      value: tag.id,
-    }));
-  }, [onboarding.tags]);
+  const { tags, interests } = onboarding;
 
-  const interests: Option[] = useMemo(() => {
-    return onboarding.interests.map((interest) => ({
-      label: interest.name,
-      value: interest.id,
-    }));
-  }, [onboarding.interests]);
+  // const tags: Option[] = useMemo(() => {
+  //   return onboarding.tags.map((tag) => ({
+  //     label: tag.name,
+  //     value: tag.id,
+  //   }));
+  // }, [onboarding.tags]);
+
+  // const interests: Option[] = useMemo(() => {
+  //   return onboarding.interests.map((interest) => ({
+  //     label: interest.name,
+  //     value: interest.id,
+  //   }));
+  // }, [onboarding.interests]);
 
   return (
     <CardHeader className="p-2">
