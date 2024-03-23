@@ -105,6 +105,8 @@ function OnboardingMainNavigation({ user, tags, interests }: LayoutProps) {
     }
   };
 
+  console.log("tags", methods.formState.errors);
+
   useEffect(() => {
     setOnboarding({
       tags: tags.map((tag) => ({
@@ -123,6 +125,7 @@ function OnboardingMainNavigation({ user, tags, interests }: LayoutProps) {
 
   async function onSubmit(values: TOnboardingSchema) {
     try {
+      console.log("values", values);
       await updateUser(values);
       router.replace("/");
     } catch (error) {

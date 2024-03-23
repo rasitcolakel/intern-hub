@@ -1,5 +1,6 @@
 "use server";
 
+import { paths } from "@/common/paths";
 import prisma from "@/db/db";
 import { TOnboardingSchema } from "@/types/onboarding";
 import { UserCreatedEvent } from "@/types/user";
@@ -11,7 +12,7 @@ export const createUser = async (payload: UserCreatedEvent) => {
   const user: Prisma.UserCreateInput = {
     id: payload.data.id,
     email: payload.data.email_addresses[0]?.email_address,
-    name: `${payload.data.first_name} ${payload.data.last_name}`,
+    name: `${payload.data.first_name ?? ""} ${payload.data.last_name ?? ""}`,
   };
 
   try {
@@ -36,10 +37,6 @@ export const getMe = async () => {
       where: {
         id: userId,
       },
-      include: {
-        interests: true,
-        tags: true,
-      },
     });
     return user;
   } catch (error) {
@@ -53,7 +50,7 @@ export const updateUser = async (data: TOnboardingSchema) => {
     const me = await getMe();
 
     if (!me) {
-      return redirect("/sign-in");
+      return redirect(paths.signIn);
     }
 
     const { type } = data;
@@ -69,17 +66,20 @@ export const updateUser = async (data: TOnboardingSchema) => {
       updatedData = {
         name: data.name,
         type: data.type,
-        interests: {
+      };
+      if (data.interests)
+        updatedData.interests = {
           connect: data.interests.map((interest) => ({
             id: interest.id,
           })),
-        },
-        tags: {
+        };
+      if (data.tags) {
+        updatedData.tags = {
           connect: data.tags.map((tag) => ({
             id: tag.id,
           })),
-        },
-      };
+        };
+      }
     }
     const updatedUser = await prisma.user.update({
       where: {

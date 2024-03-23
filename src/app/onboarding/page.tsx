@@ -1,6 +1,7 @@
 import { getMinifiedInterests } from "@/actions/interestActions";
 import { getMinifiedTags } from "@/actions/tagActions";
 import { getMe } from "@/actions/userActions";
+import { paths } from "@/common/paths";
 import OnboardingMainNavigation from "@/components/layout/onboarding/OnboardingMainNavigation";
 import { unstable_cache } from "next/cache";
 import { redirect } from "next/navigation";
@@ -20,7 +21,11 @@ async function Onboarding() {
   ]);
 
   if (!me) {
-    redirect("/sign-in");
+    return redirect(paths.signIn);
+  }
+
+  if (me.type) {
+    return redirect(paths.home);
   }
 
   return (
