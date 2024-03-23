@@ -19,6 +19,6 @@ if (process.env.NODE_ENV !== "production") globalThis.prisma = prisma;
 if (process.env.NODE_ENV !== "production") {
   prisma.$on("query" as never, (e: Prisma.QueryEvent) => {
     // eslint-disable-next-line no-console
-    console.log(`Duration: ${e.duration}ms`);
+    console.log(e.query);
   });
 }

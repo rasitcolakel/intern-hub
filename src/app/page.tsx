@@ -1,6 +1,4 @@
 "use server";
-import { auth, useAuth } from "@clerk/nextjs";
-import prisma from "@/db/db";
 import { redirect } from "next/navigation";
 import { getMe } from "@/actions/userActions";
 
