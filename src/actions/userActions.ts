@@ -13,6 +13,7 @@ export const createUser = async (payload: UserCreatedEvent) => {
     id: payload.data.id,
     email: payload.data.email_addresses[0]?.email_address,
     name: `${payload.data.first_name ?? ""} ${payload.data.last_name ?? ""}`,
+    avatar: payload.data.profile_image_url,
   };
 
   try {
