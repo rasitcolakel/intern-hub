@@ -1,3 +1,6 @@
+import { getInterns } from "@/services/intern";
+import { Interest, Prisma, Tag, User } from "@prisma/client";
+
 export interface UserCreatedEvent {
   data: UserCreatedPayload;
   object: string;
@@ -35,3 +38,15 @@ export interface EmailAddress {
   linked_to: any[];
   object: string;
 }
+
+export type InternItem = Prisma.PromiseReturnType<typeof getInterns>[number];
+
+export type GetInternsResponse = {
+  interns: InternItem[];
+  total: number;
+};
+
+export type GetInternsRequest = {
+  page: number;
+  limit: number;
+} & Prisma.UserFindManyArgs;

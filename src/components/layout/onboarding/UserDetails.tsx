@@ -1,5 +1,5 @@
 import { TOnboardingSchema } from "@/types/onboarding";
-import React from "react";
+import React, { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import {
   CardContent,
@@ -20,11 +20,26 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { UserType } from "@prisma/client";
 import { Building2, UserRoundSearch } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 type Props = {};
 
 const UserDetails = (props: Props) => {
-  const { control } = useFormContext<TOnboardingSchema>();
+  const { control, watch } = useFormContext<TOnboardingSchema>();
+
+  const type = watch("type");
+
+  const aboutLabels = useMemo(() => {
+    return type === UserType.INTERN
+      ? {
+          label: "Hakkımda",
+          placeholder: "Biraz kendinden bahset",
+        }
+      : {
+          label: "Şirket Hakkında",
+          placeholder: "Şirketiniz hakkında biraz bilgi verin",
+        };
+  }, [type]);
 
   return (
     <CardHeader className="p-2">
@@ -44,6 +59,26 @@ const UserDetails = (props: Props) => {
               <FormLabel>Ad Soyad</FormLabel>
               <FormControl>
                 <Input placeholder="Ad Soyad" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="flex py-5">
+          <Separator />
+        </div>
+        <FormField
+          control={control}
+          name="about"
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormLabel>{aboutLabels.label}</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder={aboutLabels.placeholder}
+                  className="resize-none"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

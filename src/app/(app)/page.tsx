@@ -7,8 +7,8 @@ import { paths } from "@/common/paths";
 export default async function Home() {
   const me = await getMe();
 
-  const redirectToOnboarding = me && !me?.type;
-
+  const redirectToOnboarding = !me?.type;
+  console.log("redirectToOnboarding", redirectToOnboarding);
   if (redirectToOnboarding) return redirect(paths.onboarding);
 
   return <></>;

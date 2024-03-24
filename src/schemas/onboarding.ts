@@ -5,6 +5,7 @@ export const OnboardingSchema = z.object({
   step: z.number(),
   name: z.string().min(2).max(255),
   type: z.enum([UserType.COMPANY, UserType.INTERN]),
+  about: z.string().min(2).max(255),
   interests: z
     .array(
       z.object({

@@ -27,14 +27,12 @@ type LayoutProps = {
 };
 
 const steps = [
-  ["name", "type"] as (keyof TOnboardingSchema)[],
+  ["name", "type", "about"] as (keyof TOnboardingSchema)[],
   ["interests"] as (keyof TOnboardingSchema)[],
 ];
 
 const internSteps = [...steps];
 const companySteps = [steps[0]];
-
-type FieldName = keyof TOnboardingSchema;
 
 function OnboardingMainNavigation({ user, tags, interests }: LayoutProps) {
   const setOnboarding = useSetAtom(onboardingAtom);
@@ -43,6 +41,7 @@ function OnboardingMainNavigation({ user, tags, interests }: LayoutProps) {
     defaultValues: {
       step: 0,
       name: user.name,
+      about: user.about,
     },
   });
 
@@ -105,8 +104,6 @@ function OnboardingMainNavigation({ user, tags, interests }: LayoutProps) {
     }
   };
 
-  console.log("tags", methods.formState.errors);
-
   useEffect(() => {
     setOnboarding({
       tags: tags.map((tag) => ({
@@ -125,7 +122,6 @@ function OnboardingMainNavigation({ user, tags, interests }: LayoutProps) {
 
   async function onSubmit(values: TOnboardingSchema) {
     try {
-      console.log("values", values);
       await updateUser(values);
       router.replace("/");
     } catch (error) {

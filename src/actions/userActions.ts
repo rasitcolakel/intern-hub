@@ -1,7 +1,9 @@
 "use server";
+import { GetInternsRequest, GetInternsResponse } from "@/types/user";
 
 import { paths } from "@/common/paths";
 import prisma from "@/db/db";
+import { getInterns, getInternsCount } from "@/services/intern";
 import { TOnboardingSchema } from "@/types/onboarding";
 import { UserCreatedEvent } from "@/types/user";
 import { auth } from "@clerk/nextjs";
@@ -56,7 +58,9 @@ export const updateUser = async (data: TOnboardingSchema) => {
 
     const { type } = data;
 
-    let updatedData: Prisma.UserUpdateInput = {};
+    let updatedData: Prisma.UserUpdateInput = {
+      about: data.about,
+    };
 
     if (type === UserType.COMPANY) {
       updatedData = {
@@ -82,6 +86,7 @@ export const updateUser = async (data: TOnboardingSchema) => {
         };
       }
     }
+
     const updatedUser = await prisma.user.update({
       where: {
         id: me.id,
@@ -91,6 +96,24 @@ export const updateUser = async (data: TOnboardingSchema) => {
     return updatedUser;
   } catch (error) {
     console.error("Error updating user:", error);
+    throw error;
+  }
+};
+
+export const fetchInterns = async (
+  args: GetInternsRequest
+): Promise<GetInternsResponse> => {
+  try {
+    const [interns, total] = await Promise.all([
+      getInterns(args),
+      getInternsCount(),
+    ]);
+    return {
+      interns,
+      total,
+    };
+  } catch (error) {
+    console.error("Error getting interns:", error);
     throw error;
   }
 };
