@@ -44,6 +44,7 @@ export type InternItem = Prisma.PromiseReturnType<typeof getInterns>[number];
 export type GetInternsResponse = {
   interns: InternItem[];
   total: number;
+  hasNext: boolean;
 };
 
 export type GetInternsRequest = {

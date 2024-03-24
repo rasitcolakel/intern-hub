@@ -155,11 +155,16 @@ export const fetchInterns = async (
 
     const [interns, total] = await Promise.all([
       getInterns(args),
-      getInternsCount(),
+      getInternsCount({
+        where: {
+          ...getFilterInputParams(keys),
+        },
+      }),
     ]);
     return {
       interns,
       total,
+      hasNext: total > args.page * args.limit,
     };
   } catch (error) {
     console.error("Error getting interns:", error);

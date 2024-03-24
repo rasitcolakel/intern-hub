@@ -235,6 +235,8 @@ const MultipleSelector = React.forwardRef<
     useEffect(() => {
       if (value) {
         setSelected(value);
+      } else {
+        setSelected([]);
       }
     }, [value]);
 

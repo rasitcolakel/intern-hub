@@ -91,7 +91,7 @@ const InterestsAndTechStack = (props: Props) => {
             render={({ field }) => (
               <MultipleSelector
                 options={tags}
-                placeholder="İlgi alanlarınızı seçin"
+                placeholder="Teknolojileri seçin"
                 emptyIndicator={
                   <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
                     Sonuç bulunamadı.
