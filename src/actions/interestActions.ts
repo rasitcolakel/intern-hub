@@ -13,3 +13,8 @@ export const getMinifiedInterests = async (): Promise<TMinifiedInterest[]> => {
     },
   });
 };
+
+export const getCachedInterests = unstable_cache(
+  async () => getMinifiedInterests(),
+  ["interests"]
+);

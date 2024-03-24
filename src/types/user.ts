@@ -49,4 +49,6 @@ export type GetInternsResponse = {
 export type GetInternsRequest = {
   page: number;
   limit: number;
+  tagIds?: string[];
+  interestIds?: string[];
 } & Prisma.UserFindManyArgs;

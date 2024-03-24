@@ -100,10 +100,59 @@ export const updateUser = async (data: TOnboardingSchema) => {
   }
 };
 
+const getFilter = (keys: string[], values?: string[][]) => {
+  if (keys.length === 0) {
+    return {};
+  }
+
+  if (keys.length === 1) {
+    return {
+      [keys[0]]: {
+        some: {
+          id: {
+            in: values![0],
+          },
+        },
+      },
+    };
+  }
+
+  return {
+    OR: keys.map((key, index) => ({
+      [key]: {
+        some: {
+          id: {
+            in: values![index],
+          },
+        },
+      },
+    })),
+  };
+};
+
+const getFilterInputParams = (obj: Record<string, string[]>) => {
+  const keys = Object.keys(obj);
+  const values = Object.values(obj);
+
+  return getFilter(keys, values);
+};
 export const fetchInterns = async (
   args: GetInternsRequest
 ): Promise<GetInternsResponse> => {
   try {
+    const keys = {
+      ...(args.interestIds && { interests: args.interestIds }),
+      ...(args.tagIds && { tags: args.tagIds }),
+    };
+
+    args.where = {
+      ...args.where,
+      ...getFilterInputParams(keys),
+    };
+
+    delete args.tagIds;
+    delete args.interestIds;
+
     const [interns, total] = await Promise.all([
       getInterns(args),
       getInternsCount(),
@@ -112,6 +161,42 @@ export const fetchInterns = async (
       interns,
       total,
     };
+  } catch (error) {
+    console.error("Error getting interns:", error);
+    throw error;
+  }
+};
+
+export const getInternsByTagsAndInterests = async (
+  tags: string[],
+  interests: string[]
+) => {
+  try {
+    const interns = await prisma.user.findMany({
+      where: {
+        OR: [
+          {
+            tags: {
+              some: {
+                id: {
+                  in: tags,
+                },
+              },
+            },
+          },
+          {
+            interests: {
+              some: {
+                id: {
+                  in: interests,
+                },
+              },
+            },
+          },
+        ],
+      },
+    });
+    return interns;
   } catch (error) {
     console.error("Error getting interns:", error);
     throw error;

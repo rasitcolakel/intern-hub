@@ -1,17 +1,18 @@
-import { fetchInterns } from "@/actions/userActions";
-import InternCard from "@/components/ui/intern-card";
+import { getCachedInterests } from "@/actions/interestActions";
+import { getCachedTags } from "@/actions/tagActions";
+import InternFilter from "@/components/filters/InternFilter";
+import InternList from "@/components/list/intern-list";
 
 async function InternsPage() {
-  const { interns = [] } = await fetchInterns({
-    page: 1,
-    limit: 10,
-  });
+  const [tags, interests] = await Promise.all([
+    getCachedTags(),
+    getCachedInterests(),
+  ]);
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 w-full">
-      {interns.map((intern) => (
-        <InternCard key={intern.id} user={intern} />
-      ))}
+    <div className="flex flex-row w-full">
+      <InternFilter tags={tags} interests={interests} />
+      <InternList />
     </div>
   );
 }
