@@ -5,7 +5,9 @@ import { User, Prisma, UserType } from "@prisma/client";
 import prisma from "@/db/db";
 import { GetInternsRequest } from "@/types/user";
 
-export const getInterns = async (args: GetInternsRequest) => {
+export const getInterns = async (
+  args: Omit<GetInternsRequest, "tagIds" | "interestIds">
+) => {
   const { page, limit, ...rest } = args;
 
   return prisma.user.findMany({

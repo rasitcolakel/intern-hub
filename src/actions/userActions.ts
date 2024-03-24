@@ -141,8 +141,8 @@ export const fetchInterns = async (
 ): Promise<GetInternsResponse> => {
   try {
     const keys = {
-      ...(args.interestIds && { interests: args.interestIds }),
-      ...(args.tagIds && { tags: args.tagIds }),
+      ...(args.interestIds?.length && { interests: args.interestIds }),
+      ...(args.tagIds?.length && { tags: args.tagIds }),
     };
 
     args.where = {
@@ -161,42 +161,6 @@ export const fetchInterns = async (
       interns,
       total,
     };
-  } catch (error) {
-    console.error("Error getting interns:", error);
-    throw error;
-  }
-};
-
-export const getInternsByTagsAndInterests = async (
-  tags: string[],
-  interests: string[]
-) => {
-  try {
-    const interns = await prisma.user.findMany({
-      where: {
-        OR: [
-          {
-            tags: {
-              some: {
-                id: {
-                  in: tags,
-                },
-              },
-            },
-          },
-          {
-            interests: {
-              some: {
-                id: {
-                  in: interests,
-                },
-              },
-            },
-          },
-        ],
-      },
-    });
-    return interns;
   } catch (error) {
     console.error("Error getting interns:", error);
     throw error;
